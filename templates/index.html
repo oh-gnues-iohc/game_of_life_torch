@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Boxes</title>
+    <style>
+        .box {
+            width: 15px;
+            height: 15px;
+            display: inline-block;
+            margin: 2px;
+            border: 1px solid #000; /* 테두리 추가 */
+        }
+    </style>
+</head>
+<body>
+    <button onclick="start()">Start</button>
+    <button onclick="stop()">Stop</button>
+    {% for row in state %}
+        <div>
+            {% for value in row %}
+                <div class="box" onclick="toggleBoxColor(this)" style="background-color: {% if value == 1 %}black{% else %}white{% endif %};"></div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <br>
+
+    <script>
+        function start() {
+            fetch('/start');
+        }
+
+        function stop() {
+            fetch('/stop');
+        }
+
+    function toggleBoxColor(box, row, value) {
+        var currentColor = box.style.backgroundColor;
+        box.style.backgroundColor = (currentColor === 'black') ? 'white' : 'black';
+        updateServerState();
+    }
+
+    function updateServerState() {
+        // Extract the current state from the DOM and send it to the server
+        var boxes = document.querySelectorAll('.box');
+        var newState = [];
+
+        boxes.forEach(function (box) {
+            newState.push(box.style.backgroundColor === 'black' ? 1 : 0);
+        });
+
+        fetch('/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ state: newState }),
+        });
+    }
+
+    function updateBoxes() {
+        fetch('/')
+            .then(response => response.text())
+            .then(data => {
+                document.body.innerHTML = data;
+                setTimeout(updateBoxes, 500);
+            });
+    }
+
+    window.onload = updateBoxes;
+    </script>
+</body>
+</html>
