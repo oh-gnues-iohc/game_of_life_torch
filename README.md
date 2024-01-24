@@ -1,2 +1,5 @@
 # game_of_life_torch
-"game_of_life_torch" is a simulation of Conway's Game of Life implemented in Python using the PyTorch library. The Game of Life is a cellular automaton, where the evolution of cells is simulated based on simple rules. This implementation leverages PyTorch for efficient computation and provides a visual representation of the evolving cell patterns.
+
+Life Game Project created using Flask and PyTorch
+
+![Animation](https://github.com/oh-gnues-iohc/game_of_life_torch/assets/79557937/569b2857-bf14-42e1-a6e6-833e091a6c54)
